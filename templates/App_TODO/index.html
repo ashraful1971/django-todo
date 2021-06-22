@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
+    <title>TO-DO List</title>
+</head>
+<body>
+    <section>
+        <h1>TO-DO LIST</h1>
+        <div class="add_new box">
+            {% if itemData is not None %}
+            <form action="{% url 'App_TODO:update' %}" method="POST">
+                {% csrf_token %}
+                <input type="text" autofocus name="name" placeholder="Enter the name..." value="{{ itemData.name }}">
+                <input type="hidden" name="id" value="{{ itemData.id }}">
+                <input class="btn" type="submit" name="submit" value="Update">
+            </form>
+            {% else %}
+            <form action="{% url 'App_TODO:add' %}" method="POST">
+                {% csrf_token %}
+                <input type="text" autofocus name="name" placeholder="Enter the name...">
+                <input class="btn" type="submit" name="submit" value="Add">
+            </form>
+            {% endif %}
+        </div>
+        {% for todo in todos %}
+        <div class="show_item box">
+            <div class="item_text">
+                <a href="{% url 'App_TODO:delete' pk=todo.id %}"><h3>{{ todo.name }}</h3></a>
+            </div>
+            <div class="item_action">
+                <a href="{% url 'App_TODO:edit' pk=todo.id %}">Edit</a>
+                <a href="{% url 'App_TODO:delete' pk=todo.id %}">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+</body>
+</html>
